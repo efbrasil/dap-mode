@@ -1246,11 +1246,11 @@ ADAPTER-ID the id of the adapter."
 (defun dap--set-breakpoints-request (debug-session file-name file-breakpoints)
   "Make `setBreakpoints' request for FILE-NAME.
 FILE-BREAKPOINTS is a list of the breakpoints to set for FILE-NAME."
-  (let ((file-name-only (f-filename file-name))
+  (let* ((file-name-only (f-filename file-name))
         (local-file-path (if (eq system-type 'windows-nt)
                                    (s-replace "/" "\\" file-name)
                            file-name))
-        (remote-file-path (--> debug-session dap--debug-session-local-to-remote-path-fn (funcall it file-name))))
+        (remote-file-path (--> debug-session dap--debug-session-local-to-remote-path-fn (funcall it local-file-path))))
     (with-temp-buffer
       (insert-file-contents file-name)
       (dap--make-request
